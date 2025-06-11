@@ -1,7 +1,19 @@
 from flask import Flask,render_template, request, redirect, url_for, session
+import sqlite3
+
 # 객체생성
 app = Flask(__name__)
 app.secret_key = 'secret key'
+
+def save_messages(name, email, message):
+    conn = sqlite3.connect('contact.db')
+    c = conn.cursor()
+    c.execute('''
+        insert into messages(name, email, message)
+        values(?,?,?)          
+    '''), (name, email, message)
+    conn.commit()
+    conn.close()
 
 @app.route('/')
 def index():
